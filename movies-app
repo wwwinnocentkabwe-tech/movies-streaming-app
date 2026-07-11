@@ -1,0 +1,15 @@
+movies-app/
+│
+├── server.js              # Main entry point
+├── package.json           # Dependencies & scripts
+│
+├── routes/                # API route handlers
+│   ├── auth.js
+│   ├── movies.js
+│   └── users.js
+│
+├── models/                # Database schemas
+│   ├── User.js
+│   └── Movie.js
+│
+└── node_modules/          # Installed libraries
