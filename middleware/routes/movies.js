@@ -6,6 +6,7 @@ const multer = require('multer');
 const Movie = require('../../models/Movie');
 const authMiddleware = require('../auth');
 const roleMiddleware = require('../role');
+const { validationRules, handleValidationErrors } = require('../validators');
 
 const router = express.Router();
 
