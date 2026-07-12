@@ -54,7 +54,36 @@ router.post('/', authMiddleware, roleMiddleware('admin'), upload.single('file'),
     res.status(500).json({ error: 'Server error' });
   }
 });
+// Rate a movie (1-5 stars) — one rating per user, re-rating updates it in place
+router.post(
+  '/:id/rate',
+  authMiddleware,
+  validationRules.rating,
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { rating } = req.body;
+      const movie = await Movie.findById(req.params.id);
+      if (!movie) return res.status(404).json({ error: 'Movie not found' });
 
+      const existingRating = movie.ratings.find(r => r.user.toString() === req.user._id.toString());
+      if (existingRating) {
+        existingRating.rating = rating;
+      } else {
+        movie.ratings.push({ user: req.user._id, rating });
+      }
+
+      const total = movie.ratings.reduce((sum, r) => sum + r.rating, 0);
+      movie.averageRating = total / movie.ratings.length;
+
+      await movie.save();
+      res.json({ averageRating: movie.averageRating, ratingCount: movie.ratings.length });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+  }
+);
 // Download movie file
 router.get('/:id/download', authMiddleware, async (req, res) => {
   try {
