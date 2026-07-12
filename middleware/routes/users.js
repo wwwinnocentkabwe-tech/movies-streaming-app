@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
@@ -42,8 +42,10 @@ router.post('/login', async (req, res) => {
 // Get user profile
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
-    res.json(req.user);
+    const { password, ...safeUser } = req.user.toObject();
+    res.json(safeUser);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 });
