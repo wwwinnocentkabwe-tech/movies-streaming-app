@@ -24,8 +24,19 @@ const upload = multer({ storage });
 // Get all movies
 router.get('/', async (req, res) => {
   try {
-    const movies = await Movie.find();
-    res.json(movies);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalMovies = await Movie.countDocuments();
+    const movies = await Movie.find().skip(skip).limit(limit);
+
+    res.json({
+      movies,
+      totalPages: Math.ceil(totalMovies / limit),
+      currentPage: page,
+      totalMovies
+    });
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }

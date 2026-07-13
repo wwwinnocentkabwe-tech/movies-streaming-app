@@ -6,6 +6,8 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Admin from './components/Admin'
 
+axios.defaults.baseURL = import.meta.env.VITE_API_URL
+
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'))
   const [user, setUser] = useState(null)
