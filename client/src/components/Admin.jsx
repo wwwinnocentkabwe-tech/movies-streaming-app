@@ -13,7 +13,7 @@ function Admin({ token }) {
   const fetchMovies = async () => {
     try {
       const res = await axios.get('/api/movies')
-      setMovies(res.data)
+      setMovies(res.data.movies || res.data)
     } catch (err) {
       console.error(err)
     }
