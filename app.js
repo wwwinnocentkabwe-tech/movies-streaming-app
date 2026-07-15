@@ -8,12 +8,7 @@ const { body, validationResult } = require('express-validator');
 const path = require('path');
 const fs = require('fs');
 const app = express();
-// Ensure the Storage directory exists (Git doesn't track empty folders,
-// so this guarantees it's there on every fresh deploy)
-const storageDir = path.join(__dirname, 'Storage');
-if (!fs.existsSync(storageDir)) {
-  fs.mkdirSync(storageDir, { recursive: true });
-}
+
 // ===== SECURITY MIDDLEWARE =====
 // Helmet sets various HTTP headers to protect against common vulnerabilities
 app.use(helmet());
