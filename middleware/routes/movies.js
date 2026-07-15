@@ -36,11 +36,10 @@ router.get('/', async (req, res) => {
       totalPages: Math.ceil(totalMovies / limit),
       currentPage: page,
       totalMovies
-    });
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
+    } catch (err) {
+  console.error('Add movie error:', err);
+  res.status(500).json({ error: 'Server error' });
+}
 
 // Get movie by ID
 router.get('/:id', async (req, res) => {

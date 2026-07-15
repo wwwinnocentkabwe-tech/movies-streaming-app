@@ -6,9 +6,14 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { body, validationResult } = require('express-validator');
 const path = require('path');
-
+const fs = require('fs');
 const app = express();
-
+// Ensure the Storage directory exists (Git doesn't track empty folders,
+// so this guarantees it's there on every fresh deploy)
+const storageDir = path.join(__dirname, 'Storage');
+if (!fs.existsSync(storageDir)) {
+  fs.mkdirSync(storageDir, { recursive: true });
+}
 // ===== SECURITY MIDDLEWARE =====
 // Helmet sets various HTTP headers to protect against common vulnerabilities
 app.use(helmet());
@@ -20,7 +25,10 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
-app.use(cors(corsOptions));
+const storageDir = path.join(__dirname, 'middleware', 'Storage');
+if (!fs.existsSync(storageDir)) {
+  fs.mkdirSync(storageDir, { recursive: true });
+}
 
 // Body parser with size limit to prevent large payload attacks
 app.use(express.json({ limit: '10kb' }));
