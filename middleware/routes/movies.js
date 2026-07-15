@@ -31,15 +31,17 @@ router.get('/', async (req, res) => {
     const totalMovies = await Movie.countDocuments();
     const movies = await Movie.find().skip(skip).limit(limit);
 
-    res.json({
+res.json({
       movies,
       totalPages: Math.ceil(totalMovies / limit),
       currentPage: page,
       totalMovies
-    } catch (err) {
-  console.error('Add movie error:', err);
-  res.status(500).json({ error: 'Server error' });
-}
+    });
+  } catch (err) {
+    console.error('Get movies error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 // Get movie by ID
 router.get('/:id', async (req, res) => {
