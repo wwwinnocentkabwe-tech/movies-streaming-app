@@ -12,8 +12,9 @@ const authMiddleware = async (req, res, next) => {
     if (!req.user) return res.status(401).json({ error: 'Invalid token' });
     next();
   } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
-  }
+  console.error('Add movie error:', err);
+  res.status(500).json({ error: 'Server error' });
+}
 };
 
 module.exports = authMiddleware;
