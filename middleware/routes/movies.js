@@ -63,11 +63,10 @@ router.post('/', authMiddleware, roleMiddleware('admin'), upload.single('file'),
     const movie = new Movie({ title, genre, description, releaseYear, fileUrl, uploadedBy: req.user._id });
     await movie.save();
     res.json(movie);
-  } catch (err) {
- } catch (err) {
-  console.error('Add movie error:', err);
-  res.status(500).json({ error: 'Server error' });
-}
+} catch (err) {
+    console.error('Add movie error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 // Rate a movie (1-5 stars) — one rating per user, re-rating updates it in place
 router.post(
