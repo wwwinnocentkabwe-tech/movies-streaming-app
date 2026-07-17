@@ -20,6 +20,7 @@ const corsOptions = {
 methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
+app.use(cors(corsOptions));
 const storageDir = path.join(__dirname, 'middleware', 'Storage');
 if (!fs.existsSync(storageDir)) {
   fs.mkdirSync(storageDir, { recursive: true });
