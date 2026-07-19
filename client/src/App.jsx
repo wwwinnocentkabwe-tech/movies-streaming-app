@@ -1,6 +1,6 @@
 // trigger rebuild
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import axios from 'axios'
 import './App.css'
 import Home from './components/Home'
@@ -68,7 +68,7 @@ function App() {
         </nav>
         <Routes>
           <Route path="/" element={<Home token={token} />} />
-          <Route path="/login" element={<Login onLogin={login} />} />
+         <Route path="/login" element={token ? <Navigate to="/" /> : <Login onLogin={login} />} />
           <Route path="/admin" element={<Admin token={token} />} />
         </Routes>
         <footer>
