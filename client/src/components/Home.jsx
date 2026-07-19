@@ -110,8 +110,9 @@ function Home({ token }) {
                 <button onClick={() => addToFavorites(movie._id)}>Add to Favorites</button>
                 <button onClick={() => downloadMovie(movie._id, movie.title)}>Download Movie</button>
                 <video controls width="300">
-                  <source src={`/api/movies/${movie._id}/stream`} type="video/mp4" />
-                </video>
+               <video controls width="300">
+  <source src={`${import.meta.env.VITE_API_URL}/api/movies/${movie._id}/stream`} type="video/mp4" />
+</video>
               </div>
             ))}
           </div>
