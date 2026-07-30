@@ -109,8 +109,8 @@ function Home({ token }) {
                 <input type="number" min="1" max="5" placeholder="Rate 1-5" onChange={(e) => rateMovie(movie._id, e.target.value)} />
                 <button onClick={() => addToFavorites(movie._id)}>Add to Favorites</button>
                 <button onClick={() => downloadMovie(movie._id, movie.title)}>Download Movie</button>
-       <video controls width="300">
-  <source src={`${import.meta.env.VITE_API_URL}/api/movies/${movie._id}/stream`} type="video/mp4" />
+    <video controls width="300">
+  <source src={`${import.meta.env.VITE_API_URL}/api/movies/${movie._id}/stream?token=${token}`} type="video/mp4" />
 </video>
     </div>
             ))}
