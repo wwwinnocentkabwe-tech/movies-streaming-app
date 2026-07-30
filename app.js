@@ -11,7 +11,9 @@ const app = express();
 
 // ===== SECURITY MIDDLEWARE =====
 // Helmet sets various HTTP headers to protect against common vulnerabilities
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 
 // CORS with restricted origins in production
 const corsOptions = {
