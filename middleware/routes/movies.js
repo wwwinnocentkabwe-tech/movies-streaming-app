@@ -142,9 +142,10 @@ router.get('/:id/stream', authMiddleware, async (req, res) => {
     });
 
     stream.pipe(res);
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
+} catch (err) {
+  console.error('Stream error:', err);
+  res.status(500).json({ error: 'Server error' });
+}
 });
 
 module.exports = router; 
