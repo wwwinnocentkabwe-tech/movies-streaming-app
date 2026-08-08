@@ -126,4 +126,27 @@ router.get('/:id/stream', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+// Delete a movie (admin only)
+router.delete('/:id', authMiddleware, roleMiddleware('admin'), async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) return res.status(404).json({ error: 'Movie not found' });
+
+    // Try to remove the file from Cloudinary, but don't fail the request if this errors
+    if (movie.fileUrl) {
+      try {
+        const publicId = movie.fileUrl.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(`movies/${publicId}`, { resource_type: 'video' });
+      } catch (fileErr) {
+        console.error('Cloudinary delete warning:', fileErr);
+      }
+    }
+
+    await Movie.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Movie deleted successfully' });
+  } catch (err) {
+    console.error('Delete movie error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 module.exports = router; 
