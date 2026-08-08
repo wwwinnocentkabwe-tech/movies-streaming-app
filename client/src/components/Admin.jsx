@@ -4,7 +4,8 @@ import axios from 'axios'
 function Admin({ token }) {
   const [movies, setMovies] = useState([])
   const [form, setForm] = useState({ title: '', genre: '', description: '', releaseYear: '' })
-  const [file, setFile] = useState(null)
+ const [file, setFile] = useState(null)
+const [poster, setPoster] = useState(null)
 
   useEffect(() => {
     if (token) fetchMovies()
@@ -26,7 +27,8 @@ function Admin({ token }) {
     formData.append('genre', form.genre)
     formData.append('description', form.description)
     formData.append('releaseYear', form.releaseYear)
-    if (file) formData.append('file', file)
+   if (file) formData.append('file', file)
+if (poster) formData.append('poster', poster)
 
     try {
       await axios.post('/api/movies', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -34,6 +36,7 @@ function Admin({ token }) {
       fetchMovies()
       setForm({ title: '', genre: '', description: '', releaseYear: '' })
       setFile(null)
+setPoster(null)
     } catch (err) {
       alert('Error adding movie')
     }
@@ -77,8 +80,9 @@ function Admin({ token }) {
         <input placeholder="Genre" value={form.genre} onChange={(e) => setForm({...form, genre: e.target.value})} required />
         <input placeholder="Description" value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} />
         <input type="number" placeholder="Release Year" value={form.releaseYear} onChange={(e) => setForm({...form, releaseYear: e.target.value})} />
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-        <button type="submit">Add Movie</button>
+       <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+<input type="file" accept="image/*" onChange={(e) => setPoster(e.target.files[0])} />
+<button type="submit">Add Movie</button>
       </form>
       <div className="movie-list">
         {movies.map(movie => (
