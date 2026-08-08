@@ -52,7 +52,7 @@ function App() {
     <Router>
       <div className="App">
         <nav>
-          <h1>Movies App</h1>
+  <a href="/"><h1>Movies App</h1></a>
           <div>
             <button onClick={toggleDarkMode}>{darkMode ? 'Light' : 'Dark'} Mode</button>
             {token ? (
