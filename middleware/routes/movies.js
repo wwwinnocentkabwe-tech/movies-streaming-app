@@ -13,11 +13,20 @@ const router = express.Router();
 const cloudinary = require('../cloudinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary, 
-  params: {
-    folder: 'movies',
-    resource_type: 'video',
-    allowed_formats: ['mp4', 'mov', 'avi', 'mkv'],
+  cloudinary: cloudinary,
+  params: (req, file) => {
+    if (file.fieldname === 'poster') {
+      return {
+        folder: 'movies/posters',
+        resource_type: 'image',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+      };
+    }
+    return {
+      folder: 'movies',
+      resource_type: 'video',
+      allowed_formats: ['mp4', 'mov', 'avi', 'mkv'],
+    };
   },
 });
 
@@ -57,12 +66,12 @@ router.get('/:id', async (req, res) => {
 });
 
 // Add new movie (admin only)
-router.post('/', authMiddleware, roleMiddleware('admin'), upload.single('file'), async (req, res) => {
-  try {
-    const { title, genre, description, releaseYear } = req.body;
-    if (!title || !genre) return res.status(400).json({ error: 'Title and genre are required' });
-    const fileUrl = req.file ? req.file.path : null;
-    const movie = new Movie({ title, genre, description, releaseYear, fileUrl, uploadedBy: req.user._id });
+upload.fields([{ name: 'file', maxCount: 1 }, { name: 'poster', maxCount: 1 }])
+   const { title, genre, description, releaseYear } = req.body;
+if (!title || !genre) return res.status(400).json({ error: 'Title and genre are required' })
+const fileUrl = req.files?.file ? req.files.file[0].path : null;
+const posterUrl = req.files?.poster ? req.files.poster[0].path : null;
+const movie = new Movie({ title, genre, description, releaseYear, fileUrl, posterUrl, uploadedBy: req.user._id });
     await movie.save();
     res.json(movie);
 } catch (err) {
