@@ -10,13 +10,15 @@ const { validationRules, handleValidationErrors } = require('../validators');
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../Storage'));
+const cloudinary = require('../cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary, 
+  params: {
+    folder: 'movies',
+    resource_type: 'video',
+    allowed_formats: ['mp4', 'mov', 'avi', 'mkv'],
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
 });
 
 const upload = multer({ storage });
@@ -59,7 +61,7 @@ router.post('/', authMiddleware, roleMiddleware('admin'), upload.single('file'),
   try {
     const { title, genre, description, releaseYear } = req.body;
     if (!title || !genre) return res.status(400).json({ error: 'Title and genre are required' });
-    const fileUrl = req.file ? req.file.filename : null;
+    const fileUrl = req.file ? req.file.path : null;
     const movie = new Movie({ title, genre, description, releaseYear, fileUrl, uploadedBy: req.user._id });
     await movie.save();
     res.json(movie);
@@ -117,35 +119,11 @@ router.get('/:id/stream', authMiddleware, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).json({ error: 'Movie not found' });
-
-    const filePath = path.resolve(__dirname, '../Storage', movie.fileUrl);
-    if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found' });
-    const stat = fs.statSync(filePath);
-    const fileSize = stat.size;
-    const range = req.headers.range;
-
-    if (!range) {
-      res.status(416).send('Range header required');
-      return;
-    }
-
-    const CHUNK_SIZE = 10 ** 6; // 1MB
-    const start = Number(range.replace(/\D/g, ''));
-    const end = Math.min(start + CHUNK_SIZE, fileSize - 1);
-
-    const stream = fs.createReadStream(filePath, { start, end });
-    res.writeHead(206, {
-      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': end - start + 1,
-      'Content-Type': 'video/mp4',
-    });
-
-    stream.pipe(res);
-} catch (err) {
-  console.error('Stream error:', err);
-  res.status(500).json({ error: 'Server error' });
-}
+    if (!movie.fileUrl) return res.status(404).json({ error: 'File not found' });
+    res.redirect(movie.fileUrl);
+  } catch (err) {
+    console.error('Stream error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
-
 module.exports = router; 
