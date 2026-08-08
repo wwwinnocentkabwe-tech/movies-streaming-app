@@ -6,7 +6,8 @@ const MovieSchema = new mongoose.Schema({
   genre: String,
   description: String,
   releaseYear: Number,
-  fileUrl: String,
+ fileUrl: String,
+posterUrl: String,
   uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   ratings: [{ user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, rating: Number }],
   averageRating: { type: Number, default: 0 }
