@@ -66,15 +66,16 @@ router.get('/:id', async (req, res) => {
 });
 
 // Add new movie (admin only)
-upload.fields([{ name: 'file', maxCount: 1 }, { name: 'poster', maxCount: 1 }])
-   const { title, genre, description, releaseYear } = req.body;
-if (!title || !genre) return res.status(400).json({ error: 'Title and genre are required' })
-const fileUrl = req.files?.file ? req.files.file[0].path : null;
-const posterUrl = req.files?.poster ? req.files.poster[0].path : null;
-const movie = new Movie({ title, genre, description, releaseYear, fileUrl, posterUrl, uploadedBy: req.user._id });
+router.post('/', authMiddleware, roleMiddleware('admin'), upload.fields([{ name: 'file', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), async (req, res) => {
+  try {
+    const { title, genre, description, releaseYear } = req.body;
+    if (!title || !genre) return res.status(400).json({ error: 'Title and genre are required' })
+    const fileUrl = req.files?.file ? req.files.file[0].path : null;
+    const posterUrl = req.files?.poster ? req.files.poster[0].path : null;
+    const movie = new Movie({ title, genre, description, releaseYear, fileUrl, posterUrl, uploadedBy: req.user._id });
     await movie.save();
     res.json(movie);
-} catch (err) {
+  } catch (err) {
     console.error('Add movie error:', err);
     res.status(500).json({ error: 'Server error' });
   }
