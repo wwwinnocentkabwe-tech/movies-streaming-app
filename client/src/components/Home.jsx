@@ -11,7 +11,7 @@ function Home({ token }) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (token) fetchMovies()
+fetchMovies()
   }, [token, page])
 
   useEffect(() => {
