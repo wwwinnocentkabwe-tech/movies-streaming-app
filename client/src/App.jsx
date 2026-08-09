@@ -69,7 +69,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home token={token} />} />
          <Route path="/login" element={token ? <Navigate to="/" /> : <Login onLogin={login} />} />
-          <Route path="/admin" element={<Admin token={token} />} />
+          <Route path="/admin" element={user?.role === 'admin' ? <Admin token={token} /> : <Navigate to="/" />} />
         </Routes>
         <footer>
           <p>&copy; 2026 MovieStream. Built with ❤️ using React & Node.js</p>
