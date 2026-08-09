@@ -41,6 +41,13 @@ fetchMovies()
     setFilteredMovies(filtered)
   }
 
+  const handleTimeUpdate = (e) => {
+  if (!token && e.target.currentTime > 30) {
+    e.target.pause();
+    alert('Sign in to keep watching the full movie!');
+  }
+};
+
   const addToFavorites = async (movieId) => {
     try {
       await axios.post(`/api/users/favorites/${movieId}`)
@@ -109,7 +116,7 @@ fetchMovies()
                 <input type="number" min="1" max="5" placeholder="Rate 1-5" onChange={(e) => rateMovie(movie._id, e.target.value)} />
                 <button onClick={() => addToFavorites(movie._id)}>Add to Favorites</button>
                 <button onClick={() => downloadMovie(movie._id, movie.title)}>Download Movie</button>
-    <video controls width="300" poster={movie.posterUrl}>
+<video controls width="300" poster={movie.posterUrl} onTimeUpdate={handleTimeUpdate}>
   <source src={movie.fileUrl} type="video/mp4" />
 </video>
     </div>
