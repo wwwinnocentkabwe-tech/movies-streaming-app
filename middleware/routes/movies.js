@@ -135,6 +135,28 @@ router.get('/:id/stream', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+// Update a movie (admin only)
+router.put('/:id', authMiddleware, roleMiddleware('admin'), upload.fields([{ name: 'file', maxCount: 1 }, { name: 'poster', maxCount: 1 }]), async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) return res.status(404).json({ error: 'Movie not found' });
+
+    const { title, genre, description, releaseYear } = req.body;
+    if (title !== undefined) movie.title = title;
+    if (genre !== undefined) movie.genre = genre;
+    if (description !== undefined) movie.description = description;
+    if (releaseYear !== undefined) movie.releaseYear = releaseYear;
+
+    if (req.files?.file) movie.fileUrl = req.files.file[0].path;
+    if (req.files?.poster) movie.posterUrl = req.files.poster[0].path;
+
+    await movie.save();
+    res.json(movie);
+  } catch (err) {
+    console.error('Update movie error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 // Delete a movie (admin only)
 router.delete('/:id', authMiddleware, roleMiddleware('admin'), async (req, res) => {
   try {
