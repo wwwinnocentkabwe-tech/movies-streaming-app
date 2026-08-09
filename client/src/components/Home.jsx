@@ -110,7 +110,7 @@ fetchMovies()
                 <button onClick={() => addToFavorites(movie._id)}>Add to Favorites</button>
                 <button onClick={() => downloadMovie(movie._id, movie.title)}>Download Movie</button>
     <video controls width="300" poster={movie.posterUrl}>
-  <source src={`${import.meta.env.VITE_API_URL}/api/movies/${movie._id}/stream?token=${token}`} type="video/mp4" />
+  <source src={movie.fileUrl} type="video/mp4" />
 </video>
     </div>
             ))}
