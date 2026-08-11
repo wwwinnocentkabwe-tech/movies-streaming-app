@@ -29,6 +29,7 @@ function Login({ onLogin }) {
         <input type="email" placeholder="Email" required onChange={(e) => setForm({...form, email: e.target.value})} />
         <input type="password" placeholder="Password" required onChange={(e) => setForm({...form, password: e.target.value})} />
         <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
+        {isLogin && <a href="/forgot-password">Forgot Password?</a>}
         <button type="button" onClick={() => setIsLogin(!isLogin)}>Switch to {isLogin ? 'Register' : 'Login'}</button>
       </form>
     </div>
