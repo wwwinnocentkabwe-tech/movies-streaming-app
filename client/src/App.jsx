@@ -6,6 +6,8 @@ import './App.css'
 import Home from './components/Home'
 import Login from './components/Login'
 import Admin from './components/Admin'
+import ForgotPassword from './components/ForgotPassword'
+import ResetPassword from './components/ResetPassword'
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL
 
@@ -70,6 +72,8 @@ function App() {
           <Route path="/" element={<Home token={token} />} />
          <Route path="/login" element={token ? <Navigate to="/" /> : <Login onLogin={login} />} />
           <Route path="/admin" element={user?.role === 'admin' ? <Admin token={token} /> : <Navigate to="/" />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
         <footer>
           <p>&copy; 2026 MovieStream. Built with ❤️ using React & Node.js</p>
