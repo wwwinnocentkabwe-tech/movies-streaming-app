@@ -1,29 +1,27 @@
 // utils/email.js
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // STARTTLS
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-  family: 4,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendResetEmail = async (toEmail, resetLink) => {
-  await transporter.sendMail({
-    from: `"Movies App" <${process.env.EMAIL_USER}>`,
+  const { data, error } = await resend.emails.send({
+    from: 'Movies App <onboarding@resend.dev>',
     to: toEmail,
     subject: 'Password Reset Request',
     html: `
       <p>You requested a password reset.</p>
-      <p>Click the link below to set a new password. This link expires in 1 hour.</p>
+      <p>Click the link below to set a new password. This link will expire shortly.</p>
       <a href="${resetLink}">${resetLink}</a>
       <p>If you didn't request this, you can safely ignore this email.</p>
     `,
   });
+
+  if (error) {
+    console.error('Resend error:', error);
+    throw new Error('Failed to send reset email');
+  }
+
+  return data;
 };
 
 module.exports = { sendResetEmail };
