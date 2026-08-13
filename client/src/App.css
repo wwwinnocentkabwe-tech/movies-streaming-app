@@ -227,6 +227,23 @@ body.dark input, body.dark select {
   font-size: 1.2rem;
   opacity: 0.9;
   animation: slideInFromBottom 1s ease-out 0.5s both;
+  }
+
+  /* Mobile responsiveness for Hero */
+@media (max-width: 600px) {
+  .hero {
+    padding: 2rem 1rem;
+    margin: 1rem;
+  }
+
+  .hero h2 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
 }
 
 /* Footer */
