@@ -58,11 +58,18 @@ nav a:hover {
   gap: 20px;
 }
 
+@media (max-width: 600px) {
+  .movies {
+    gap: 12px;
+    padding: 0 0.5rem;
+  }
+
 .movie-card {
   border: 1px solid #e0e0e0;
   margin: 10px;
   padding: 20px;
   width: 300px;
+  max-width: 90%;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
