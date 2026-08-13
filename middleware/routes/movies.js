@@ -115,11 +115,11 @@ router.get('/:id/download', authMiddleware, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).json({ error: 'Movie not found' });
+    if (!movie.fileUrl) return res.status(404).json({ error: 'File not found' });
 
-    const filePath = path.resolve(__dirname, '../Storage', movie.fileUrl);
-    if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found' });
-    res.download(filePath);
+    res.redirect(movie.fileUrl);
   } catch (err) {
+    console.error('Download error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
