@@ -71,6 +71,15 @@ nav a:hover {
     margin: 6px 0;
   }
 
+  .movie-video {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 10px;
+  display: block;
+}
+
   .movie-card h3 {
     font-size: 1.1rem;
   }

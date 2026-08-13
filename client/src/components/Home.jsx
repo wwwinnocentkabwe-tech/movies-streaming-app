@@ -116,7 +116,7 @@ fetchMovies()
                 <input type="number" min="1" max="5" placeholder="Rate 1-5" onChange={(e) => rateMovie(movie._id, e.target.value)} />
                 <button onClick={() => addToFavorites(movie._id)}>Add to Favorites</button>
                 <button onClick={() => downloadMovie(movie._id, movie.title)}>Download Movie</button>
-<video controls width="300" poster={movie.posterUrl} onTimeUpdate={handleTimeUpdate}>
+<video controls poster={movie.posterUrl} onTimeUpdate={handleTimeUpdate} className="movie-video">
   <source src={movie.fileUrl} type="video/mp4" />
 </video>
     </div>
